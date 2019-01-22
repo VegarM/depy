@@ -16,11 +16,11 @@ mydep = DEPy()
 try:
     stoken = sys.argv[1]
 except IndexError:
-    print 'No path to stoken.json given, aborting.'
+    print('No path to stoken.json given, aborting.')
     sys.exit(-1)
 
 if not os.path.exists(stoken):
-    print 'Path to stoken at %s not found, aborting.' % stoken
+    print('Path to stoken at %s not found, aborting.' % stoken)
     sys.exit(-1)
 
 mydep.init_stoken(stoken)
@@ -28,13 +28,13 @@ mydep.init_stoken(stoken)
 myinfo = mydep.account_info()
 mydevices = mydep.get_devices()
 
-print myinfo
-print mydevices
+print(myinfo)
+print(mydevices)
 
 devicelistcomplete = mydevices.get('more_to_follow')
 
-print devicelistcomplete
+print(devicelistcomplete)
 
 deviceinfo = mydep.get_device_info('C02SOMESERIAL')
 
-print deviceinfo
+print(deviceinfo)

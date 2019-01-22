@@ -39,7 +39,7 @@ requesting and renewing the request token as needed for any DEP API operations.
 
     accountinfo = mydep.account_info()
 
-    print accountinfo
+    print(accountinfo)
 
     Retrieving DEP account info...
     Sending account call via get
@@ -119,11 +119,11 @@ class DEPy():
                               ('consumer_key', 'CK_'),
                               ('access_secret', 'AS_')):
                 if not self.mytoken.get(k).startswith(prefix):
-                    print 'Error parsing stoken file: bad value for:\n%s = %s\n' % (k, self.mytoken[k])
+                    print('Error parsing stoken file: bad value for:\n%s = %s\n' % (k, self.mytoken[k]))
                     sys.exit(-1)
 
         except AttributeError:
-            print 'Error parsing stoken file: missing key for:\n%s\n' % (k)
+            print('Error parsing stoken file: missing key for:\n%s\n' % (k))
             sys.exit(-1)
 
         # Set the required OAuth1 keys from the source stoken
@@ -161,7 +161,7 @@ class DEPy():
             prep.headers['X-ADM-Auth-Session'] = token
         # If we received no token or token is None we have a problem, halt.
         else:
-            print "No token found, we must exit now..."
+            print("No token found, we must exit now...")
             sys.exit(-1)
 
         # Common required headers for DEP API calls, we use v2 as v1 is deprecated
@@ -196,7 +196,7 @@ class DEPy():
                       int(timestamp)).strftime(
                       '%Y-%m-%d %H:%M:%S')
 
-        print "Token generated at %s" % ts_readable
+        print("Token generated at %s" % ts_readable)
 
         return token, timestamp
 
@@ -226,7 +226,7 @@ class DEPy():
         # Check whether we received JSON data as part of the query, in which case
         # we include it in the Session.request() call using the 'json' var.
         if jsondata:
-            print "Sending JSON data to %s via %s" % (endpoint, method)
+            print("Sending JSON data to %s via %s" % (endpoint, method))
             prepped = self.dep_prep(endpoint, method, token=self.auth_session_token)
             response = s.request(method=prepped.method,
                                  url=prepped.url,
@@ -236,7 +236,7 @@ class DEPy():
         # Check whether we received HTTP query data, in which case we need to
         # include it in the Session.request() call using the 'params' var.
         elif params:
-            print "Sending query string %s to %s via %s" % (params, endpoint, method)
+            print("Sending query string %s to %s via %s" % (params, endpoint, method))
             prepped = self.dep_prep(endpoint, method, token=self.auth_session_token, params=True)
             response = s.request(method=prepped.method,
                                  url=prepped.url,
@@ -246,7 +246,7 @@ class DEPy():
         # If we got neither JSON or query parameters we can use the less involved
         # Session.send() method instead.
         else:
-            print "Sending %s call via %s" % (endpoint, method)
+            print("Sending %s call via %s" % (endpoint, method))
             prepped = self.dep_prep(endpoint, method, token=self.auth_session_token)
             response = s.send(prepped)
 
@@ -254,7 +254,7 @@ class DEPy():
         # auth session expired or wasn't accepted so we request a new one and retry
         # the same HTTP request again. Otherwise we move on.
         if response.status_code == 401 or response.status_code == 403:
-            print "Token expired, updating"
+            print("Token expired, updating")
             self.auth_session_token, self.auth_timestamp = self.get_auth_token()
             return self.send_request(endpoint, method, jsondata=jsondata, params=params)
         else:
@@ -286,7 +286,7 @@ class DEPy():
          }
         """
 
-        print "Retrieving DEP account info..."
+        print("Retrieving DEP account info...")
         return self.send_request('account', 'get')
 
 
@@ -330,7 +330,7 @@ class DEPy():
         }
         """
 
-        print "Retrieving devices..."
+        print("Retrieving devices...")
         return self.send_request('server/devices', 'post')
 
 
@@ -349,7 +349,7 @@ class DEPy():
             elif type(devices) is list:
                 devices = {'devices': devices}
             else:
-                print 'Provided device info is neither dict, list or string, aborting.'
+                print('Provided device info is neither dict, list or string, aborting.')
                 sys.exit(-1)
 
         result = self.send_request('devices', 'post', jsondata=devices)
